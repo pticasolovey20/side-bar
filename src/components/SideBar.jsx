@@ -1,18 +1,18 @@
 import { useState } from "react";
 import { classNames } from "../utils";
 
-import Chevron from "../icons/Chevron";
-import Search from "../icons/Search";
 import Home from "../icons/Home";
 import Chart from "../icons/Chart";
 import Bell from "../icons/Bell";
 import PieChart from "../icons/PieChart";
 import Heart from "../icons/Heart";
 import Wallet from "../icons/Wallet";
-import LogOut from "../icons/LogOut";
-import Moon from "../icons/Moon";
 
-import logo from "../assets/logo.png";
+import SideHeader from "./SideHeader";
+import SideTrigger from "./SideTrigger";
+import SideSearch from "./SideSearch";
+import SideSwitch from "./SideSwitch";
+import SideLogOut from "./SideLogOut";
 
 const NAVIGATION = [
 	{ id: 1, icon: <Home />, label: "Dashboard" },
@@ -25,111 +25,64 @@ const NAVIGATION = [
 
 const SideBar = () => {
 	const [isOpen, setIsOpen] = useState(false);
+	const [isActive, setIsActive] = useState(1);
 
 	return (
 		<section
 			className={classNames(
-				isOpen ? "w-[250px]" : "w-[75px]",
-				"fixed flex flex-col gap-10",
-				"rounded-br-md text-text-color",
-				"bg-sidebar-color shadow-md shadow-black/25",
-				"transition-width duration-300 ease-in-out"
+				isOpen ? "w-[250px]" : "w-[72px]",
+				"flex flex-col gap-10",
+				"rounded-br-lg text-text-color",
+				"bg-sidebar-color shadow-[0px_7px_10px] shadow-text-color/50",
+				"transition-width duration-500 ease-in-out"
 			)}
 		>
 			<div className="relative p-4">
-				<div className="flex gap-3 items-center">
-					<img src={logo} alt="logo" className="w-10 h-10 rounded-[6px]" />
-
-					<div className={classNames("flex flex-col", isOpen ? "block" : "hidden")}>
-						<span className="text-[18px] font-medium truncate leading-5">Codinglab</span>
-						<span className="truncate leading-4">Web developer</span>
-					</div>
-				</div>
-
-				<button
-					className={classNames(
-						"absolute top-1/3 -right-3",
-						"p-0.2 rounded-full outline-none",
-						"fill-white bg-primary-color"
-					)}
-					onClick={() => setIsOpen(!isOpen)}
-				>
-					<Chevron />
-				</button>
+				<SideHeader isOpen={isOpen} />
+				<SideTrigger isOpen={isOpen} setIsOpen={setIsOpen} />
 			</div>
 
 			<div className="flex flex-col h-full justify-between">
-				<div className="flex flex-col px-4 py-2.5 pb-6 border-b">
-					<div
-						className={classNames(
-							"flex gap-2 p-2 rounded-md cursor-pointer",
-							"text-text-color fill-[#707070] bg-primary-color-light"
-						)}
-					>
-						<button className="aspect-square" onClick={() => setIsOpen(true)}>
-							<Search />
-						</button>
-
-						<input
-							placeholder="Search..."
-							className={classNames(
-								"w-[80%] pl-1 outline-none bg-transparent",
-								isOpen ? "block" : "hidden"
-							)}
-						/>
-					</div>
-
+				<div className="flex flex-col gap-2 px-4 py-2.5 pb-6 border-b">
+					<SideSearch isOpen={isOpen} setIsOpen={setIsOpen} />
 					<nav>
 						<ul className="flex flex-col gap-2">
 							{NAVIGATION.map(({ id, icon, label }) => (
 								<li
 									key={id}
 									className={classNames(
-										"flex items-center gap-2",
-										"p-2 rounded-md cursor-pointer",
-										"hover:text-white",
+										"w-full flex items-center gap-2",
+										"p-2 rounded-md shadow-none cursor-pointer",
+
+										isActive === id
+											? "text-white bg-primary-color shadow-text-color shadow-md fill-white"
+											: "",
+
 										"fill-[#707070] hover:fill-white",
-										"hover:bg-primary-color"
+										"hover:text-white hover:shadow-md",
+										"hover:shadow-text-color hover:bg-primary-color",
+										'transition-bg duration-300 ease-in-out"'
 									)}
+									onClick={() => setIsActive(id)}
 								>
 									<div className="aspect-square">{icon}</div>
-									<span className={classNames(isOpen ? "block" : "hidden")}>{label}</span>
+									<span
+										className={classNames(
+											isOpen ? "opacity-1" : "opacity-0",
+											"transition-opacity duration-300 ease-in-out"
+										)}
+									>
+										{label}
+									</span>
 								</li>
 							))}
 						</ul>
 					</nav>
 				</div>
 
-				<div className="px-4 py-6">
-					<button
-						className={classNames(
-							"w-full flex gap-2 p-2 rounded-md cursor-pointer",
-							"text-text-color hover:text-white",
-							"fill-[#707070] hover:fill-white",
-							"hover:bg-primary-color"
-						)}
-					>
-						<div className="aspect-square">
-							<LogOut />
-						</div>
-
-						<span className={classNames("truncate", isOpen ? "block" : "hidden")}>Logout</span>
-					</button>
-
-					<div
-						className={classNames(
-							"w-full flex gap-2 p-2 rounded-md cursor-pointer",
-							"text-text-color hover:text-white",
-							"fill-[#707070] hover:fill-white",
-							"hover:bg-primary-color"
-						)}
-					>
-						<button className="aspect-square">
-							<Moon />
-						</button>
-
-						<span className={classNames("truncate", isOpen ? "block" : "hidden")}>Dark Mode</span>
-					</div>
+				<div className="flex flex-col gap-2 px-4 py-6">
+					<SideLogOut isOpen={isOpen} />
+					<SideSwitch isOpen={isOpen} />
 				</div>
 			</div>
 		</section>
